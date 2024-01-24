@@ -49,7 +49,8 @@ from proxy.views import TopHeadlinesView, SourcesView
 # Develop endpoints for retrieving news (e.g., by category, country, source,query).
 
 urlpatterns = [
-    path('top-headlines', TopHeadlinesView.as_view()),
-    path('sources', SourcesView.as_view()),
+    path('top-headlines/', TopHeadlinesView.as_view()),
+    path('sources/<str:category>/', SourcesView.as_view()),
+    path('sources/', SourcesView.as_view()),
     # ... other endpoints
 ]
