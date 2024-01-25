@@ -113,11 +113,12 @@ DATABASES = {
 
 # celery configuration
 # useful docs concerning schedules: https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html#crontab-schedules
-CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_BEAT_SCHEDULE = {
     'save_news_every_hour': {
         'task': 'tasks.save_news_task',
-        'schedule': crontab(hour='*'),  # Run every hour
+        'schedule': crontab(minute='*/1'),  # Run every hour
+        # crontab(minute='*/15') Execute every 15 minutes.
     },
 } 
 

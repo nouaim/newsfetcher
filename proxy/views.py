@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from proxy.models import NewsItem
 import requests
-import datetime
 from proxy.tasks import save_news_task
 from dotenv import load_dotenv
 import os
@@ -26,16 +25,15 @@ class TopHeadlinesView(APIView):
         for article in data['articles']:
             news = {
                 'title': article['title'],
-                # 'content': article['content'],
+                'content': article['content'],
                 'source': article['source']['name'],
                 'url': article['url'],
                 'published_at': article['publishedAt'],
             }
             instance = NewsItem.objects.create(**news)
             instance.save()
-
-        # Schedule saving using Celery task
-        # save_news_task.delay(news_objects)
+            # Schedule saving using Celery task
+            save_news_task.delay(instance)
         
         # Retrieve inserted data from database
         queryset = NewsItem.objects.all()
@@ -67,15 +65,4 @@ class SourcesView(APIView):
         except requests.RequestException as e:
             # Handle request exceptions (e.g., connection errors)
             return Response({"error": f"Request error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-
-    def update(self, request):
-        ## for every miniute store the data in database
-        timenow = datetime.datetime.now()
-
-
-        ## store whatever data from the api in database
-
-
-        ## display that store data using the api
         

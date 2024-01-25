@@ -1,9 +1,9 @@
-from __future__ import absolute_import, unicode_literals
+# from __future__ import absolute_import, unicode_literals
 
 # (Celery task)
-import celery
+from celery import shared_task
 
-@celery.shared_task
+@shared_task
 def save_news_task(news_objects):
     for news_object in news_objects:
         news_object.save()

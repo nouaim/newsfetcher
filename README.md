@@ -57,7 +57,7 @@ sudo systemctl start rabbitmq-server  ## if you see "active" it means we are goo
 ```
 12. inside the project folder, run:
 ```shell
-celery worker --loglevel=info
+celery -A newsfetcher worker --loglevel=info
 ```
 13. 
 
