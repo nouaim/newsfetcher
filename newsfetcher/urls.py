@@ -14,43 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
-# from django.urls import path, include
-# from rest_framework import routers
-# from newsfetcher.proxy import views
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api-auth/', include('rest_framework.urls'))
-# ]
-
-# from django.urls import path
-# from proxy.views import ExternalApiView
-
-# router = routers.DefaultRouter()
-# router.register(r'users', views.CategtyViewSet)
-# router.register(r'groups', views.CountryViewSet)
-
-# urlpatterns = [
-#     path('', include(router.urls)),
-#     path('external-api/', ExternalApiView.as_view(), name='external-api'),
-#     # path('category/', ExternalApiView.as_view(), name='external-api'),
-#     # path('country/', ExternalApiView.as_view(), name='external-api'),
-#     # path('source/', ExternalApiView.as_view(), name='external-api'),
-#     # path('query/', ExternalApiView.as_view(), name='external-api'),
-# ]
-
-# urlpatterns += router.urls
-
-
 
 from django.urls import path
 from proxy.views import TopHeadlinesView, SourcesView
 
-# Develop endpoints for retrieving news (e.g., by category, country, source,query).
+# Develop endpoints for retrieving news (e.g., by category, source, country...).
 
 urlpatterns = [
     path('top-headlines/', TopHeadlinesView.as_view()),
-    path('sources/<str:category>/', SourcesView.as_view()),
+    path('sources&category=<str:category>/', SourcesView.as_view()), ## example for buiness:  http://127.0.0.1:8000/sources&category%3Dbusiness/
+    path('sources&country=<str:country>/', SourcesView.as_view()), ## example for Saudi Arabia: http://127.0.0.1:8000/sources&country%3Dsa/
     path('sources/', SourcesView.as_view()),
     # ... other endpoints
 ]

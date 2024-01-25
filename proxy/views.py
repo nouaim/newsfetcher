@@ -1,58 +1,49 @@
-# class ExternalApiView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         # Specify the API endpoint URL
-#         api_url = "https://newsapi.org/v2/top-headlines/sources?apiKey={api_key}"
+from proxy.serializers import NewsSerializer
 
-#         try:
-#             # Make a GET request to the API
-#             response = requests.get(api_url)
-
-#             if response.status_code == 200:
-#                 # Parse the JSON response
-#                 data = response.json()
-#                 return Response(data, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({"error": "Failed to fetch data from the API"}, status=response.status_code)
-
-#         except requests.RequestException as e:
-#             # Handle request exceptions (e.g., connection errors)
-#             return Response({"error": f"Request error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-from dotenv import load_dotenv
-import os
-load_dotenv()
-# # get the api key as an environment variable
-api_key = os.getenv("API_KEY")
-
-
+# from django.views.generic import DetailView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-# from .models import NewsItem
-# from .serializers import NewsItemSerializer
+from proxy.models import NewsItem
 import requests
-# from .models import NewsItem
+import datetime
+from proxy.tasks import save_news_task
+from dotenv import load_dotenv
+import os
+load_dotenv()
+# get the api key as an environment variable
+api_key = os.getenv("API_KEY")
 
 class TopHeadlinesView(APIView):
+    model = NewsItem
+    
     def get(self, request):
         news_api_url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
         response = requests.get(news_api_url)
         data = response.json()
+        ## get the data from the database.
+        news_objects = []
+        for article in data['articles']:
+            news = {
+                'title': article['title'],
+                # 'content': article['content'],
+                'source': article['source']['name'],
+                'url': article['url'],
+                'published_at': article['publishedAt'],
+            }
+            instance = NewsItem.objects.create(**news)
+            instance.save()
 
-        return Response(data)
-        # for article in data['articles']:
-        #     data = {
-        #         'title': article['title'],
-        #         'content': article['content'],
-        #         'source': article['source']['name'],
-        #         'url': article['url'],
-        #         'published_at': article['publishedAt'],
-        #     }
-        #     NewsItem.objects.create(**data)
+        # Schedule saving using Celery task
+        # save_news_task.delay(news_objects)
+        
+        # Retrieve inserted data from database
+        queryset = NewsItem.objects.all()
+        
+        serializer = NewsSerializer(queryset, many=True)
+        return Response(serializer.data)
 
         # news_items = data['articles']
-        # for item in news_items:
-        #     # Customize data as needed
-        #     item['description'] = item['description'][:150] + '...'
 
         # serialized_data = NewsItemSerializer(news_items, many=True).data
             
@@ -60,11 +51,13 @@ class TopHeadlinesView(APIView):
         # why it is not working properly
 
 class SourcesView(APIView):
-    def get(self, request, category=None):
-        if category is None:
+    def get(self, request, category=None, country=None):
+        if not category and not country:
             sources = f"https://newsapi.org/v2/top-headlines/sources"
-        else:
+        elif category and not country:
             sources = f"https://newsapi.org/v2/top-headlines/sources?category={category}"
+        elif not category and country:
+            sources = f"https://newsapi.org/v2/top-headlines/sources?country={country}"
         headers = {'Authorization': api_key}
         try:
             # Make a GET request to the API
@@ -79,4 +72,15 @@ class SourcesView(APIView):
         except requests.RequestException as e:
             # Handle request exceptions (e.g., connection errors)
             return Response({"error": f"Request error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
+    def update(self, request):
+        ## for every miniute store the data in database
+        timenow = datetime.datetime.now()
+
+
+        ## store whatever data from the api in database
+
+
+        ## display that store data using the api
+        
