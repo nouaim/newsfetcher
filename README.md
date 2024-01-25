@@ -21,6 +21,9 @@ $ sudo docker run --name postgresql2 -e POSTGRES_PASSWORD=1qar2esx@ -p 5432:5432
 8. Test the database (optional)
 ```shell
 $ psql -h localhost -p 5432 -U postgres ## you will need to password (1qar2esx@ in our example)
+$ \c postgres 
+$ \dt ## view the available tables in the database
+$ \d proxy_newsitem  ## view our app table
 ```
 9. Add the configuration of the database in your ```.env``` file (port, host, passwords, etc)
 10. run the following commands to start running django :

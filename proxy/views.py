@@ -43,12 +43,7 @@ class TopHeadlinesView(APIView):
         serializer = NewsSerializer(queryset, many=True)
         return Response(serializer.data)
 
-        # news_items = data['articles']
-
-        # serialized_data = NewsItemSerializer(news_items, many=True).data
             
-    
-        # why it is not working properly
 
 class SourcesView(APIView):
     def get(self, request, category=None, country=None):
