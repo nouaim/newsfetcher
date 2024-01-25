@@ -76,7 +76,10 @@ python manage.py shell
 go to the database and view the length of one of the columm, you will see new data inserted :
 ```shell
 postgres=# SELECT COUNT(title) FROM proxy_newsitem; ## Check the length if title collum before and after running add_news_task.delay() 
-``
+```
+
+![base](https://github.com/nouaim/newsfetcher/assets/29921701/62ac59c3-252f-4cd9-b18e-c43e9e308c21)
+
 
 
 
