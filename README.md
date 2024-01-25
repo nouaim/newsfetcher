@@ -27,12 +27,15 @@ $ \d proxy_newsitem  ## view our app table
 
 
 ![table](https://github.com/nouaim/newsfetcher/assets/29921701/2b34f183-21af-4b87-8a0c-c005ebffffd5)
+```
 
+```shell
 $ select title from proxy_newsitem; ## to view the titles
+```
 
 ![titles](https://github.com/nouaim/newsfetcher/assets/29921701/a973d82a-9df2-4e4d-ae44-7c2a551c03d4)
 
-```
+
 9. Add the configuration of the database in your ```.env``` file (port, host, passwords, etc)
 10. run the following commands to start running django :
 ```shell
