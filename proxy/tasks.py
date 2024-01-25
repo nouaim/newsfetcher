@@ -1,8 +1,8 @@
-# from __future__ import absolute_import, unicode_literals
 from celery import Celery
-# (Celery task)
+
+# (for Celery task)
 app = Celery()
-# from celery import shared_task
+
 from proxy.models import NewsItem
 import requests
 from dotenv import load_dotenv
