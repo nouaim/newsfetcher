@@ -24,10 +24,10 @@ $ psql -h localhost -p 5432 -U postgres ## you will need to password (1qar2esx@ 
 $ \c postgres 
 $ \dt ## view the available tables in the database
 $ \d proxy_newsitem  ## view our app table
-
+```
 
 ![table](https://github.com/nouaim/newsfetcher/assets/29921701/2b34f183-21af-4b87-8a0c-c005ebffffd5)
-```
+
 
 ```shell
 $ select title from proxy_newsitem; ## to view the titles
@@ -38,6 +38,7 @@ $ select title from proxy_newsitem; ## to view the titles
 
 9. Add the configuration of the database in your ```.env``` file (port, host, passwords, etc)
 10. run the following commands to start running django :
+
 ```shell
 python manage.py makemigrations
 
@@ -45,7 +46,7 @@ python manage.py migrate
 
 python manage.py runserver
 ```
-11. start celery server
+1.  start celery server
 ```shell
 sudo apt-get install rabbitmq-server
 
