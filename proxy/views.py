@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from proxy.models import NewsItem
 import requests
-from proxy.tasks import save_news_task
+# from proxy.tasks import add_news_task
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -14,34 +14,16 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 
 class TopHeadlinesView(APIView):
-    model = NewsItem
+    model = NewsItem    
     
     def get(self, request):
-        news_api_url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
-        response = requests.get(news_api_url)
-        data = response.json()
-        ## get the data from the database.
-        news_objects = []
-        for article in data['articles']:
-            news = {
-                'title': article['title'],
-                'content': article['content'],
-                'source': article['source']['name'],
-                'url': article['url'],
-                'published_at': article['publishedAt'],
-            }
-            instance = NewsItem.objects.create(**news)
-            instance.save()
-            # Schedule saving using Celery task
-            save_news_task.delay(instance)
-        
         # Retrieve inserted data from database
         queryset = NewsItem.objects.all()
-        
         serializer = NewsSerializer(queryset, many=True)
         return Response(serializer.data)
 
-            
+    # Schedule saving using Celery task
+    # add_news_task.delay(instance)            
 
 class SourcesView(APIView):
     def get(self, request, category=None, country=None):

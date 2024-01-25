@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+# from celery import Celery
+# app = Celery()
 
 from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 import os
 load_dotenv()
-
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,7 +46,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'proxy',
+    # 'django_celery_results', # for the cache
 ]
+
+# celery setting.
+CELERY_CACHE_BACKEND = 'default'
+
+# django setting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -83,17 +96,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newsfetcher.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
 db_name = os.getenv('DB_NAME')
 db_user = os.getenv('DB_USER')
 db_password = os.getenv('DB_PASSWORD')
@@ -113,14 +115,28 @@ DATABASES = {
 
 # celery configuration
 # useful docs concerning schedules: https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html#crontab-schedules
-# CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_BEAT_SCHEDULE = {
-    'save_news_every_hour': {
-        'task': 'tasks.save_news_task',
-        'schedule': crontab(minute='*/1'),  # Run every hour
-        # crontab(minute='*/15') Execute every 15 minutes.
-    },
-} 
+CELERY_BROKER_URL = 'redis://localhost:6379'
+
+# app.conf.beat_schedule = {
+#     'run-every-30-seconds': {
+#         'task': 'proxy.tasks.add_news_task',
+#         'schedule': 30.0,
+#         # 'args': (16, 16)
+#     },
+# }
+    # 'addnews': {
+    #     'task': 'proxy.tasks.add_news_task',
+    #     'schedule': crontab(minute='*/0.15'), # Execute every 15 minutes.
+    # },
+# }
+
+# app.conf.beat_schedule = {
+#     'add_news_task': {
+#         'task': 'proxy.tasks.MyTaskClass',
+#         'schedule': timedelta(seconds=20),  # Run every ...
+#         # crontab(minute='*/15') Execute every 15 minutes.
+#     },
+# } 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

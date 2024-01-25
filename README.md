@@ -59,7 +59,27 @@ sudo systemctl start rabbitmq-server  ## if you see "active" it means we are goo
 ```shell
 celery -A newsfetcher worker --loglevel=info
 ```
-13. 
+
+
+## Test Celery
+
+run the following commands in the shell:
+
+```shell
+python manage.py shell
+>>>from proxy.tasks import add_news_task
+>>>add_news_task.delay() 
+<AsyncResult: fc0815a6-20c3-4d2a-83be-5bb9eaa0e6ee>
+```
+
+go to the database and view the length of one of the columm, you will see new data inserted :
+```shell
+postgres=# SELECT COUNT(title) FROM proxy_newsitem; ## Check the length if title collum before and after running add_news_task.delay() 
+``
+
+
+
+
 
 
 
