@@ -9,11 +9,9 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-# from celery import Celery
-# app = Celery()
+
 
 from pathlib import Path
-from celery.schedules import crontab
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -46,8 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'proxy',
-    # 'django_celery_results', # for the cache
+    'django_celery_results', # for the cache
 ]
+
+CELERY_TIMEZONE = "UTC"
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 
 # celery setting.
 CELERY_CACHE_BACKEND = 'default'
@@ -112,31 +116,6 @@ DATABASES = {
         'PORT': db_port,
     }
 }
-
-# celery configuration
-# useful docs concerning schedules: https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html#crontab-schedules
-CELERY_BROKER_URL = 'redis://localhost:6379'
-
-# app.conf.beat_schedule = {
-#     'run-every-30-seconds': {
-#         'task': 'proxy.tasks.add_news_task',
-#         'schedule': 30.0,
-#         # 'args': (16, 16)
-#     },
-# }
-    # 'addnews': {
-    #     'task': 'proxy.tasks.add_news_task',
-    #     'schedule': crontab(minute='*/0.15'), # Execute every 15 minutes.
-    # },
-# }
-
-# app.conf.beat_schedule = {
-#     'add_news_task': {
-#         'task': 'proxy.tasks.MyTaskClass',
-#         'schedule': timedelta(seconds=20),  # Run every ...
-#         # crontab(minute='*/15') Execute every 15 minutes.
-#     },
-# } 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

@@ -13,4 +13,4 @@ class NewsItem(models.Model):
     content = models.TextField(null=True)
     # published_at: Date and time when the article was published.
     published_at = models.DateTimeField()
-    # we can other fields as needed
+    # we can add other fields as needed

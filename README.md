@@ -1,6 +1,6 @@
 # The goal of this project
 
-Get data the first time from the [newsapi](https://newsapi.org) directly, and show it to the client. Then store it in a PostgreSQL database. 
+Get data the first time from the [newsapi](https://newsapi.org) directly, then store it in a PostgreSQL database.
 
 If the client clicks get, give it the data from the database.
 Within one hour update the database.
@@ -82,12 +82,9 @@ postgres=# SELECT COUNT(title) FROM proxy_newsitem; ## Check the length if title
 
 
 
+## note :
 
-
-
-
-
-
+- If celery didn't work properly, uncomment ```app.conf.beat_schedule``` settings and test it manually as described before.
 
 ### Debugging
 
