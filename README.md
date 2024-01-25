@@ -7,6 +7,10 @@ Within one hour update the database.
 
 If the same request is made by the same client serve it from the cache.
 	
+**Note**
+
+The endpoint that the database and celery should work with is : [http://127.0.0.1:8000/top-headlines/](http://127.0.0.1:8000/top-headlines/)
+
 # Steps to run the project
 
 1. Create a virtual environment:
